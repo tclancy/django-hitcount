@@ -99,7 +99,7 @@ class HitCount(models.Model):
         return u'%s' % self.content_object
 
     def save(self, *args, **kwargs):
-        self.modified = datetime.datetime.utcnow()
+        self.modified = datetime.datetime.now(datetime.timezone.utc)
 
         if not self.pk and self.object_pk and self.content_type:
             # Because we are using a models.TextField() for `object_pk` to
@@ -184,7 +184,7 @@ class Hit(models.Model):
         if not self.created:
             self.hitcount.hits = F('hits') + 1
             self.hitcount.save()
-            self.created = datetime.datetime.utcnow()
+            self.created = datetime.datetime.now(datetime.timezone.utc)
 
         super(Hit, self).save(*args, **kwargs)
 

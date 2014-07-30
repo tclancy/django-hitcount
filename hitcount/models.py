@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 from django.conf import settings
 from django.db.models import F
+from django.utils.timezone import utc
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
@@ -99,7 +100,7 @@ class HitCount(models.Model):
         return u'%s' % self.content_object
 
     def save(self, *args, **kwargs):
-        self.modified = datetime.datetime.now(datetime.timezone.utc)
+        self.modified = datetime.datetime.now(utc)
 
         if not self.pk and self.object_pk and self.content_type:
             # Because we are using a models.TextField() for `object_pk` to
@@ -184,7 +185,7 @@ class Hit(models.Model):
         if not self.created:
             self.hitcount.hits = F('hits') + 1
             self.hitcount.save()
-            self.created = datetime.datetime.now(datetime.timezone.utc)
+            self.created = datetime.datetime.now(utc)
 
         super(Hit, self).save(*args, **kwargs)
 
